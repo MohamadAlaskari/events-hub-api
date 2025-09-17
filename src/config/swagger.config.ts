@@ -1,7 +1,6 @@
 import { INestApplication } from "@nestjs/common";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
-import { join } from 'path';
-import * as express from 'express';
+
 
 
 export function setupSwagger(app: INestApplication) {
@@ -17,9 +16,5 @@ export function setupSwagger(app: INestApplication) {
   SwaggerModule.setup('swagger', app, documentFactory, {
   jsonDocumentUrl: 'swagger/json',});
 
-   // static files for swagger-ui-dist
-  app.use(
-    '/swagger',
-    express.static(join(__dirname, '../node_modules/swagger-ui-dist')),
-  )
+  
 }

@@ -3,6 +3,7 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiErrorResponses } from 'src/common/decorators/api-error-responses.decorator';
 
 @Controller('user')
 export class UserController {
@@ -10,7 +11,7 @@ export class UserController {
 
   @ApiOperation({ summary: 'Create a new user' })
   @ApiResponse({ status: 201, description: 'The user has been successfully created.' })
-  @ApiResponse({ status: 400, description: 'Bad Request.' })
+  @ApiErrorResponses()
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);

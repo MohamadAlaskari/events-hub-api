@@ -28,9 +28,9 @@ export class UserService {
       return this.userRepository.save(user);
 
      } catch (error) {
+       console.error('Error creating user:', error);
       // handle all Internal Server Errors (HTTP 500) 
       throw new InternalServerErrorException('Failed to create user');
-      console.error('Error creating user:', error);
     }
   }
 

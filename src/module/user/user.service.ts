@@ -17,7 +17,7 @@ export class UserService {
 
  
   async create(createUserDto: CreateUserDto) {
-     try {
+     
       // Hash password before saving to database using bcrypt 
       const hashedPassword = await this.hashPassword(createUserDto);
       
@@ -26,12 +26,6 @@ export class UserService {
     
       // Save user to database
       return this.userRepository.save(user);
-
-     } catch (error) {
-       console.error('Error creating user:', error);
-      // handle all Internal Server Errors (HTTP 500) 
-      throw new InternalServerErrorException('Failed to create user');
-    }
   }
 
   // Hash password using bcrypt

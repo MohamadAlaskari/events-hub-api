@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { AccessTokentype, JWTPayloadTypes } from 'src/common/utils/types/types';
@@ -44,6 +44,14 @@ export class AuthService {
     return safe;
   }
 
+  async getProfile(id: string) {
+        const user = await this.userService.findOne(id);
+        if (!user) {
+            throw new NotFoundException('User not found.');
+        }
+        return user;
+    }
+    
  private async signToken(payload: JWTPayloadTypes) : Promise<AccessTokentype> {
     return { access_token: await this.jwtService.sign(payload)} 
   }

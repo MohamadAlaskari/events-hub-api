@@ -39,15 +39,21 @@ export class UserService {
     return `This action returns all user`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(id: string) {
+     const user = await this.userRepository.findOne({ where: { id } });
+    if (!user) {
+      throw new InternalServerErrorException('User not found');
+
+    }
+   const { password: _p, ...safe } = user;
+    return safe;
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
     return `This action updates a #${id} user`;
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return `This action removes a #${id} user`;
   }
 

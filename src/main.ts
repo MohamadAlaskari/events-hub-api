@@ -13,7 +13,16 @@ async function bootstrap() {
 
 
   // Enable CORS for all origins 
-  app.enableCors();
+ app.enableCors({
+  origin: [
+    'http://localhost:3000', // Local development
+    'https://preview--spire-scene.lovable.app', // Lovable preview
+    'https://spire-scene.lovable.app', // النسخة النهائية بعد الـ preview
+  ],
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+  allowedHeaders: 'Content-Type, Authorization',
+  credentials: true,
+});
 
   // activate global HTTP exception filter 
   app.useGlobalFilters(new GlobalHttpExceptionFilter());

@@ -3,7 +3,7 @@ import { AuthService } from './auth.service';
 import { AccessTokentype } from 'src/common/utils/types/types';
 import { SignupDto } from './dto/signup.dto';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { ApiErrorResponses } from 'src/common/decorators/api-error-responses.decorator';
+import { ApiErrorResponses } from '../../common/decorators/api-error-responses.decorator';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { SigninDto } from './dto/signin.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';

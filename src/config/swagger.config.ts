@@ -10,8 +10,9 @@ export function setupSwagger(app: INestApplication) {
     .setTitle('EventHup API')
     .setDescription('API Documentation for the EventHub application')
     .setVersion('1.0')
-    //.addTag('EventHub')
+    .addBearerAuth({ type: 'http', scheme: 'bearer', bearerFormat: 'JWT' })
     .build();
+    
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('swagger', app, documentFactory, {
   jsonDocumentUrl: 'swagger/json',});

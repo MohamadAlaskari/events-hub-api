@@ -1,8 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { AccessTokentype, JWTPayloadTypes } from 'src/common/utils/types/types';
 import {  SignupDto } from './dto/signup.dto';
+
+import * as bcrypt from 'bcrypt';
+
 
 @Injectable()
 export class AuthService {
@@ -14,16 +17,34 @@ export class AuthService {
   async signup(signupDto: SignupDto) :Promise<AccessTokentype> {
     const createUser =await this.userService.create(signupDto);
 
-    const access_token= await this.generateJWT({
+    return this.signToken({
         sub: createUser.id,
         name: createUser.name,
         email: createUser.email,
         isEmailVerified: createUser.isEmailVerified
     })
-    return access_token;
+   
+  }
+  
+  async login(user: any): Promise<AccessTokentype> {
+    return this.signToken({
+      sub: user.id,
+      name: user.name,
+      email: user.email,
+      isEmailVerified: user.isEmailVerified,
+    });
   }
 
- private async generateJWT(payload: JWTPayloadTypes) : Promise<AccessTokentype> {
+  async validateUser(email: string, password: string) {
+    const user = await this.userService.findByEmail(email);
+    if (!user) return null;
+    const ok = await bcrypt.compare(password, user.password);
+    if (!ok) return null;
+    const { password: _p, ...safe } = user;
+    return safe;
+  }
+
+ private async signToken(payload: JWTPayloadTypes) : Promise<AccessTokentype> {
     return { access_token: await this.jwtService.sign(payload)} 
   }
 

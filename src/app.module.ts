@@ -27,9 +27,9 @@ import { AuthModule } from './module/auth/auth.module';
     }),
 
     // Custom Modules
+    AuthModule,
     UserModule,
 
-    AuthModule
   
   ],
   controllers: [AppController],

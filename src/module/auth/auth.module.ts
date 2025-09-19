@@ -7,7 +7,7 @@ import { UserModule } from '../user/user.module';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { PassportModule } from '@nestjs/passport';
 import { LocalStrategy } from './strategies/local.strategy';
-import { AppConfigService } from 'src/common/utils/app-config.service';
+import { AppConfigService } from '../../common/utils/app-config.service';
 
 @Module({
   imports: [

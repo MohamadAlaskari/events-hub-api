@@ -35,7 +35,7 @@ async login(@Request() req): Promise<AccessTokentype> {
 }
 
 @UseGuards(JwtAuthGuard)
-@ApiBearerAuth() // zeigt das Schloss-Icon in Swagger
+@ApiBearerAuth() 
 @Get('profile')
 me(@Request() req) {
   return this.authService.getProfile(req.user.id); // Payload oder kompletter User je nach JwtStrategy.validate

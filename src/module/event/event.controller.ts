@@ -21,8 +21,8 @@ export class EventController {
       query.page,);
   }
 
-  @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
+  //@ApiBearerAuth()
+  //@UseGuards(JwtAuthGuard)
   @Get(':id')
   getEventById(@Param('id') id: string) {
     return this.eventService.getEventById(id);

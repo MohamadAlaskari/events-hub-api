@@ -6,6 +6,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { getTypeOrmConfig } from './db/config/db.config';
 import { AuthModule } from './module/auth/auth.module';
+import { EventModule } from './module/event/event.module';
 
 
 
@@ -29,6 +30,7 @@ import { AuthModule } from './module/auth/auth.module';
     // Custom Modules
     AuthModule,
     UserModule,
+    EventModule,
 
   
   ],

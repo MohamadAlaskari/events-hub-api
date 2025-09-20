@@ -16,9 +16,11 @@ async function bootstrap() {
  app.enableCors({
   origin: [
     'http://localhost:3000', // Local development
-    'https://preview--spire-scene.lovable.app', // Lovable preview
-    'https://spire-scene.lovable.app', // النسخة النهائية بعد الـ preview
+    'https://preview--spire-scene.lovable.app', 
+    'https://spire-scene.lovable.app', 
+    "https://spire-scene-zi1q.vercel.app/"
   ],
+  
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
   allowedHeaders: 'Content-Type, Authorization',
   credentials: true,

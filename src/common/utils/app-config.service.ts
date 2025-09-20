@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
+import { EVENTS_CONFIG_KEYS } from "./constants/event.constant";
 
 @Injectable()
 export class AppConfigService {
@@ -46,6 +47,12 @@ export class AppConfigService {
     getJWTSecret(): string {
         const key = this.configService.get<string>('JWT_SECRET');
         if (!key) throw new Error('JWT_SECRET is not set in .env file');
+        return key;
+    }
+
+    getTicketmasterApiKey(): string {
+        const key = this.configService.get<string>(EVENTS_CONFIG_KEYS.API_KEY);
+        if (!key) throw new Error('TICKETMASTER_API_KEY is not set in .env file');
         return key;
     }
 

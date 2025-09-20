@@ -4,8 +4,7 @@ import { GetEventsDto } from './dto/get-events.dto';
 import { ApiBearerAuth, ApiOperation, ApiQuery } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
-@ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
+
 @Controller('event')
 export class EventController {
   constructor(private readonly eventService: EventService) {}
@@ -22,6 +21,8 @@ export class EventController {
       query.page,);
   }
 
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   getEventById(@Param('id') id: string) {
     return this.eventService.getEventById(id);

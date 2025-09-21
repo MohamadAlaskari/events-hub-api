@@ -84,8 +84,6 @@ export class EventService {
   }
   
   
-  
-  
   async getEvents(
     startDate?: string,
     countryCode?: string,
@@ -174,5 +172,31 @@ export class EventService {
       );
     }
   }
+
+  // TODO: Implement actual favorites logic
+  addFavorite(ud:string ,id: string) {
+
+  return {
+    message: "Feature not implemented yet"
+  };
+  }
+
+
+  // TODO: Implement actual favorites logic
+  getFavorites(ud:string) {
+
+    return {
+      page: { size: 0, totalElements: 0, totalPages: 0, number: 0 },
+      favorites: [],
+    };
+  }
+
+  // TODO: Implement actual favorites logic
+  removeFavorite(ud:string, id: string) {
+    return {
+      message: "Feature not implemented yet"
+    };
+  }
+
 
 }

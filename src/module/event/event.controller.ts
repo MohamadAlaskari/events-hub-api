@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query,Request, UseGuards } from '@nestjs/common';
 import { EventService } from './event.service';
 import { GetEventsDto } from './dto/get-events.dto';
 import { ApiBearerAuth, ApiOperation, ApiQuery } from '@nestjs/swagger';
@@ -21,12 +21,33 @@ export class EventController {
       query.page,);
   }
 
-  @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
+ 
   @Get(':id')
   getEventById(@Param('id') id: string) {
     return this.eventService.getEventById(id);
   }
 
+
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Post("favorite/:id")
+  addFavorite(@Request() req, @Param('id') id: string) {
+    return this.eventService.addFavorite(req.ud, id);
+  }
+
+
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Get("favoritessUser")
+  getFavorites(@Request() req) {
+    return this.eventService.getFavorites(req.ud);
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Delete("favorite/:id")
+  removeFavorite(@Request() req, @Param('id') id: string) {
+    return this.eventService.removeFavorite(req.ud, id);
+  }
  
 }

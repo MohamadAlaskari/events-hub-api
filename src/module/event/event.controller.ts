@@ -31,19 +31,15 @@ export class EventController {
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Post("favorite/:id")
-  addFavorite(@Request() req, @Param('id') id: string) {
-    return this.eventService.addFavorite(req.user.ud, id);
+  addFavorite(@Param('id') id: string) {
+    return this.eventService.addFavorite( id);
   }
 
 
-@Get("test")
-test() {
-  return "test";
-}
 
-  //@ApiBearerAuth()
-  //@UseGuards(JwtAuthGuard)
-  @Get("fa")
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Get("favoritessUser")
   getFavorites() {
     return {
       page: { size: 2, totalElements: 2, totalPages: 0, number: 0 },    
@@ -248,8 +244,8 @@ test() {
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Delete("favorite/:id")
-  removeFavorite(@Request() req, @Param('id') id: string) {
-    return this.eventService.removeFavorite(req.user.ud, id);
+  removeFavorite( @Param('id') id: string) {
+    return this.eventService.removeFavorite(id);
   }
  
 }

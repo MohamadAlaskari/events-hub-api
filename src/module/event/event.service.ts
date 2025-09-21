@@ -174,7 +174,7 @@ export class EventService {
   }
 
   // TODO: Implement actual favorites logic
-  addFavorite(ud:string ,id: string) {
+  addFavorite( id: string) {
 
   return {
     message: "Feature not implemented yet"
@@ -386,7 +386,7 @@ export class EventService {
   }
 
   // TODO: Implement actual favorites logic
-  removeFavorite(ud:string, id: string) {
+  removeFavorite( id: string) {
     return {
       message: "Feature not implemented yet"
     };

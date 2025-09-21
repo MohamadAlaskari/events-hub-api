@@ -183,12 +183,11 @@ export class EventService {
 
 
   // TODO: Implement actual favorites logic
-  getFavorites(ud:string) {
+  getFavorites() {
 
     return {
-      page: { size: 2, totalElements: 2, totalPages: 0, number: 0 },
-      
-  "favorites": [
+      page: { size: 2, totalElements: 2, totalPages: 0, number: 0 },    
+      "favorites": [
     {
       "id": "LvZ18Q5kd4MMhuOZRco6p",
       "name": "STRANDZ Norderstedt Wiesn 2025",
@@ -382,8 +381,7 @@ export class EventService {
         }
       ]
     }
-  ]
-,
+      ]
     };
   }
 

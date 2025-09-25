@@ -3,7 +3,8 @@ import { FavoriteService } from './favorite.service';
 import { CreateFavoriteDto } from './dto/create-favorite.dto';
 import { UpdateFavoriteDto } from './dto/update-favorite.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
+import { ApiErrorResponses } from 'src/common/decorators/api-error-responses.decorator';
 
 @Controller('favorites')
 @ApiBearerAuth()
@@ -14,18 +15,30 @@ export class FavoriteController {
   @Post()
   @ApiOperation({ summary: 'Add a new favorite event' })
   @ApiResponse({ status: 201, description: 'Favorite created', type: CreateFavoriteDto })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 409, description: 'Duplicate entry' })
+  @ApiErrorResponses()
   addFavorite(@Request() req, @Body() dto: CreateFavoriteDto) {
     return this.favoriteService.addFavorite(req.user.sub, dto.eventId);
   }
 
   @Delete(':eventId')
   @ApiOperation({ summary: 'Remove a favorite event' })
-  @ApiResponse({ status: 200, description: 'Favorite removed' })
+  @ApiResponse({ status: 200, description: 'Favorite removed successfully' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 404, description: 'Favorite not found' })
+  @ApiParam( { name: 'eventId', description: 'ID of the event to remove from favorites' })
   removeFavorite(@Request() req, @Param('eventId') eventId: string) {
     return this.favoriteService.removeFavorite(req.user.sub, eventId);
   }
 
   @Get()
+  @ApiOperation({ summary: 'Get all favorites for the current user' })
+  @ApiResponse({ status: 200, description: 'List of favorites' })
+  @ApiResponse({ status: 404, description: 'No favorites found' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiOperation({ summary: 'Get all favorites for the current user' })
+  @ApiResponse({ status: 200, description: 'List of favorites' })
   getFavorites(@Request() req) {
     return this.favoriteService.getFavorites(req.user.sub);
   }

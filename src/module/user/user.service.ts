@@ -42,7 +42,7 @@ export class UserService {
       throw new NotFoundException('User not found');
 
     }
-   const { password: _p, ...safe } = user;
+   const {id:_id , password: _p , ...safe } = user;
     return safe;
   }
 
@@ -54,13 +54,13 @@ export class UserService {
     
     await this.userRepository.update(id, updateUserDto);
 
-    const updatedUser = await this.userRepository.findOne({ where: { id } });
+    const updatedUser = await this.findOne(id);
     if (!updatedUser) {
       throw new NotFoundException('Error updating user after update');
     }
-    const { password: _p, ...safe } = updatedUser;
+    
 
-    return safe;
+    return updatedUser;
   
   }
 

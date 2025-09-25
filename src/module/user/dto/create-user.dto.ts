@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsEmail, IsNotEmpty, IsString, MaxLength, MinLength } from "class-validator";
+import { IsEmail, IsEnum, IsNotEmpty, IsOptional, IsString, MaxLength, MinLength } from "class-validator";
+import { CountryCode } from "../enum/CountryCode.enum";
 
 export class CreateUserDto {
     @ApiProperty({example: 'John Doe', description: 'The full name of the user', maxLength: 40, minLength: 3})   
@@ -19,5 +20,16 @@ export class CreateUserDto {
     @IsNotEmpty()
     @MinLength(5)
     password: string;
+
+    @ApiProperty({
+    example: "DE",
+    description:
+    "Country code of the user (ISO alpha-2). Default is DE (Germany).",
+    enum: CountryCode,
+    default: CountryCode.DE,
+    required: false,
+    })
+    @IsEnum(CountryCode)
+    country?: CountryCode = CountryCode.DE;
 
 }

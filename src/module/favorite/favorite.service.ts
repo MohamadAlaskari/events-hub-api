@@ -38,22 +38,17 @@ export class FavoriteService {
     }
     return { message: 'Favorite removed successfully' };
   }
-/*
-  async getFavorites(userId: number) {
+
+  async getFavorites(userId: string) {
     const favorites = await this.favoriteRepo.find({
       where: { user: { id: userId } },
     });
     const eventIds = favorites.map((f) => f.eventId);
 
-    if (!eventIds.length) return [];
+    if (!eventIds.length) throw new NotFoundException('No favorites found');
 
     // Ticketmaster API call
     const events = await this.eventService.getEventsByIds(eventIds);
-
-    return events.map((event) => {
-      const fav = favorites.find((f) => f.eventId === event.id);
-      return { ...event, addedAt: fav?.createdAt };
-    });
+    return events
   }
-*/
 }

@@ -24,10 +24,10 @@ export class FavoriteController {
   removeFavorite(@Request() req, @Param('eventId') eventId: string) {
     return this.favoriteService.removeFavorite(req.user.sub, eventId);
   }
-/*
+
   @Get()
   getFavorites(@Request() req) {
-    return this.favoriteService.getFavorites(req.user.id);
+    return this.favoriteService.getFavorites(req.user.sub);
   }
-    */
+    
 }

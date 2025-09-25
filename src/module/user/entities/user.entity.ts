@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Favorite } from "src/module/favorite/entities/favorite.entity";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class User {
@@ -16,4 +17,7 @@ export class User {
 
     @Column({ default: false })
     isEmailVerified: boolean;
+
+    @OneToMany(() => Favorite, favorite => favorite.user)
+    favorites: Favorite[];
 }

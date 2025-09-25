@@ -7,6 +7,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { getTypeOrmConfig } from './db/config/db.config';
 import { AuthModule } from './module/auth/auth.module';
 import { EventModule } from './module/event/event.module';
+import { FavoriteModule } from './module/favorite/favorite.module';
 
 
 
@@ -31,6 +32,7 @@ import { EventModule } from './module/event/event.module';
     AuthModule,
     UserModule,
     EventModule,
+    FavoriteModule,
 
   
   ],

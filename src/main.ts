@@ -6,7 +6,7 @@ import { join } from 'path';
 
 import * as express from 'express';
 import { ValidationPipe } from '@nestjs/common';
-import { GlobalHttpExceptionFilter } from './common/filters/glopal-http-Exception.filter';
+import { GlobalExceptionFilter } from './common/filters/glopal-Exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -29,7 +29,7 @@ async function bootstrap() {
 });
 
   // activate global HTTP exception filter 
-  app.useGlobalFilters(new GlobalHttpExceptionFilter());
+  app.useGlobalFilters(new GlobalExceptionFilter());
 
   
   // activate validation globally for all incoming requests 

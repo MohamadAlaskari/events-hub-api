@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -35,27 +35,42 @@ export class UserService {
     return hashedPassword;
   }
 
-  findAll() {
-    return `This action returns all user`;
-  }
 
   async findOne(id: string) {
      const user = await this.userRepository.findOne({ where: { id } });
     if (!user) {
-      throw new InternalServerErrorException('User not found');
+      throw new NotFoundException('User not found');
 
     }
    const { password: _p, ...safe } = user;
     return safe;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: string, updateUserDto: UpdateUserDto) {
+    const user = this.userRepository.findOne({ where: { id } });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    
+    await this.userRepository.update(id, updateUserDto);
+
+    const updatedUser = await this.userRepository.findOne({ where: { id } });
+    if (!updatedUser) {
+      throw new NotFoundException('Error updating user after update');
+    }
+    const { password: _p, ...safe } = updatedUser;
+
+    return safe;
+  
   }
 
-  remove(id: string) {
-    return `This action removes a #${id} user`;
+  async remove(id: string) {
+    const removeduser = await this.userRepository.delete(id);
+    if(removeduser.affected === 0) throw new NotFoundException('User not found');
+    
+    return {message: 'User deleted successfully'};
   }
+
 
   async findByEmail(email: string) {
     return this.userRepository.findOne({ where: { email } });

@@ -33,6 +33,14 @@ export class FavoriteService {
     return { message: 'Favorite removed successfully' };
   }
 
+  async isEventFavoriteByUser(userId: string, eventId: string) {
+    const favorite = await this.favoriteRepo.findOne({
+      where: { userId, eventId },
+    });
+    if (!favorite) throw new NotFoundException('Favorite not found');
+    return true;
+  }
+
   async getFavorites(userId: string) {
     const favorites = await this.favoriteRepo.find({
       where: { user: { id: userId } },

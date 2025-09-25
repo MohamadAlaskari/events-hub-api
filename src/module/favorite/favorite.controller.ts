@@ -32,6 +32,17 @@ export class FavoriteController {
     return this.favoriteService.removeFavorite(req.user.sub, eventId);
   }
 
+  
+  @Get(':eventId')
+  @ApiOperation({ summary: 'Check if an event is a favorite for the current user' })
+  @ApiResponse({ status: 200, description: 'Favorite status', type: Boolean })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 404, description: 'Event not found' })
+  isFavorite(@Request() req, @Param('eventId') eventId: string) {
+    return this.favoriteService.isEventFavoriteByUser(req.user.sub, eventId);
+  }
+
+
   @Get()
   @ApiOperation({ summary: 'Get all favorites for the current user' })
   @ApiResponse({ status: 200, description: 'List of favorites' })

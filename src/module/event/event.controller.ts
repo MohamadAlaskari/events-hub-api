@@ -12,6 +12,12 @@ export class EventController {
 
 
   @Get("events")
+  @ApiOperation({ summary: 'Get events by Country Code and Date and Size and Page but all this Options are optional' })
+  @ApiQuery({ name: 'startDate', description: 'Start Date' })
+  @ApiQuery({ name: 'countryCode', description: 'Country Code' })
+  @ApiQuery({ name: 'size', description: 'Size' })
+  @ApiQuery({ name: 'page', description: 'Page' })
+
   getEventsByLocation(@Query() query: GetEventsDto) {
     
     return this.eventService.getEvents(

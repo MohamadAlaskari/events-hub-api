@@ -13,18 +13,12 @@ export class FavoriteService {
   ) {}
 
   async addFavorite(userId: string, eventId: string) {
-    try {
-      
       const favorite = this.favoriteRepo.create({
         userId,
         eventId,
       });
       return this.favoriteRepo.save(favorite);
-    } catch (error) {
-      if(error.errno === 1062) {
-        throw new Error('Duplicate entry')
-      }
-    }
+    
   }
 
   async removeFavorite(userId: string, eventId: string) {

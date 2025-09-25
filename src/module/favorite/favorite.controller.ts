@@ -12,14 +12,14 @@ import { ApiErrorResponses } from 'src/common/decorators/api-error-responses.dec
 export class FavoriteController {
   constructor(private readonly favoriteService: FavoriteService) {}
 
-  @Post()
+  @Post(':eventId')
   @ApiOperation({ summary: 'Add a new favorite event' })
   @ApiResponse({ status: 201, description: 'Favorite created', type: CreateFavoriteDto })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 409, description: 'Duplicate entry' })
   @ApiErrorResponses()
-  addFavorite(@Request() req, @Body() dto: CreateFavoriteDto) {
-    return this.favoriteService.addFavorite(req.user.sub, dto.eventId);
+  addFavorite(@Request() req, @Param('eventId') eventId: string) {
+    return this.favoriteService.addFavorite(req.user.sub, eventId);
   }
 
   @Delete(':eventId')

@@ -74,9 +74,8 @@ export class EventService {
         };
       }
 
-      return {
-        event: this.mapEvent(response.data),
-      }
+      return this.mapEvent(response.data);
+      
       
   }
   

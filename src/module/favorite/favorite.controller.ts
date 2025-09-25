@@ -6,7 +6,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { ApiBearerAuth, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
 import { ApiErrorResponses } from 'src/common/decorators/api-error-responses.decorator';
 
-@Controller('favorites')
+@Controller('favorite')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
 export class FavoriteController {

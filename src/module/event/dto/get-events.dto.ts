@@ -13,8 +13,8 @@ export class GetEventsDto {
 
 
     @ApiPropertyOptional({
-    description: 'Startdate im ISO 8601 Format (z.B. 2025-06-10)',
-    example: '2025-06-10'
+    description: 'Startdate im ISO 8601 Format (z.B. 2025-12-10)',
+    example: '2025-12-20'
     })
     @IsOptional()
     @IsString()

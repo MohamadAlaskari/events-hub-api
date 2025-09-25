@@ -19,6 +19,8 @@ async function bootstrap() {
       'https://preview--spire-scene.lovable.app',
       'https://spire-scene.lovable.app',
       'https://spire-scene-zi1q.vercel.app',
+      'https://spire-scene-zi1q.vercel.app'
+      
     ],
    
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',

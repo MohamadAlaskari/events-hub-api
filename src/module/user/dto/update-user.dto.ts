@@ -4,4 +4,5 @@ import { IsBoolean, IsDateString, IsOptional } from 'class-validator';
 
 export class UpdateUserDto extends PartialType(CreateUserDto) {
     @IsOptional() @IsBoolean() isEmailVerified?: boolean;
+    @IsOptional() refreshTokenHash?: string | null;
 }

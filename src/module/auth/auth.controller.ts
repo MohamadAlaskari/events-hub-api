@@ -8,6 +8,7 @@ import { LocalAuthGuard } from './guards/local-auth.guard';
 import { SigninDto } from './dto/signin.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { AuthGuard } from '@nestjs/passport';
+import { RefreshDto } from './dto/refresh.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -39,6 +40,22 @@ async login(@Request() req): Promise<AccessTokentype> {
 async verifyEmail(@Query('token') token: string) {
   return this.authService.verifyEmail(token);
 }
+
+@Post('refresh')
+  @ApiOperation({ summary: 'Rotate tokens using refresh token' })
+  @ApiBody({ type: RefreshDto })
+  @ApiResponse({ status: 200 })
+  refresh(@Body() dto: RefreshDto) {
+    return this.authService.refresh(dto.refreshToken);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @Post('logout')
+  @ApiOperation({ summary: 'Invalidate refresh token for current user' })
+  logout(@Request() req) {
+    return this.authService.logout(req.user.id);
+  }
 
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth() 

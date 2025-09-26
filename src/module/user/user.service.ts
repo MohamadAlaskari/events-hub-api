@@ -42,7 +42,7 @@ export class UserService {
       throw new NotFoundException('User not found');
 
     }
-   const {id:_id , password: _p , ...safe } = user;
+   const { password: _p , ...safe } = user;
     return safe;
   }
 

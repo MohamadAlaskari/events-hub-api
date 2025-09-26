@@ -1,7 +1,7 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
-import { AccessTokentype, EmailVerifyPayloadTypes, EmailVerifyTokenType, JWTPayloadTypes } from 'src/common/utils/types/types';
+import { AccessTokentype, EmailVerifyPayloadTypes, EmailVerifyTokenType, JWTPayloadTypes, RefreshPayload, Tokens } from 'src/common/utils/types/types';
 import {  SignupDto } from './dto/signup.dto';
 import { MailService } from '../mail/mail.service';
 
@@ -18,14 +18,14 @@ export class AuthService {
     private readonly configService: ConfigService,
   ) {}
 
-  async signup(signupDto: SignupDto) :Promise<AccessTokentype> {
+  async signup(signupDto: SignupDto) :Promise<Tokens> {
     const createdUser =await this.userService.create(signupDto);
 
-    const emailVerifyToken:EmailVerifyTokenType  = await this.signEmailVerifyToken({
-      sub: createdUser.id,
-      type: 'email-verify',
-    })
-    const baseUrl = 'http://localhost:3000';
+    const emailVerifyToken:EmailVerifyTokenType  = await this.signEmailVerifyToken(createdUser.id)
+    const baseUrl = 
+    this.configService.get<string>('FRONTEND_URL') ?? 
+    this.configService.get<string>('API_BASE_URL') ?? 
+    'http://localhost:3000';
 
     this.mailService.sendVerificationEmail(
       createdUser.email, 
@@ -35,23 +35,59 @@ export class AuthService {
       );
 
 
-    return this.signToken({
-        sub: createdUser.id,
-        name: createdUser.name,
-        email: createdUser.email,
-        isEmailVerified: createdUser.isEmailVerified
-    })
+     return this.issueTokens({
+      id: createdUser.id,
+      name: createdUser.name,
+      email: createdUser.email,
+      isEmailVerified: createdUser.isEmailVerified
+    });
    
   }
   
-  async login(user: any): Promise<AccessTokentype> {
+  async login(user: any): Promise<Tokens> {
     this.mailService.sendWelcomeEmail(user.email, user.name);
-    return this.signToken({
-      sub: user.id,
+    return this.issueTokens({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      isEmailVerified: user.isEmailVerified
+    });
+  }
+
+  async refresh(refreshToken: string): Promise<Tokens> {
+    // 1) JWT prüfen und sub extrahieren
+    let payload: RefreshPayload;
+    try {
+      payload = await this.jwtService.verifyAsync<RefreshPayload>(refreshToken, {
+        secret: this.configService.get<string>('REFRESH_JWT_SECRET') ?? this.configService.get<string>('JWT_SECRET')!,
+      });
+    } catch {
+      throw new BadRequestException('Invalid or expired refresh token');
+    }
+    if (payload.type !== 'refresh' || !payload.sub) {
+      throw new BadRequestException('Invalid token type');
+    }
+
+    // 2) User laden + Hash vergleichen
+    const user = await this.userService.findOne(payload.sub);
+    if (!user) throw new NotFoundException('User not found');
+    if (!user.refreshTokenHash) throw new ForbiddenException('No active session');
+
+    const ok = await bcrypt.compare(refreshToken, user.refreshTokenHash);
+    if (!ok) throw new ForbiddenException('Invalid refresh token');
+
+    // 3) Neue Tokens ausstellen und Hash rotieren
+    return this.issueTokens({
+      id: user.id,
       name: user.name,
       email: user.email,
       isEmailVerified: user.isEmailVerified,
     });
+  }
+
+  async logout(userId: string): Promise<{ status: true , message: string }> {
+    await this.userService.update(userId, { refreshTokenHash: null });
+    return { status: true  , message: 'Logged out successfully' };
   }
 
   async validateUser(email: string, password: string) {
@@ -93,11 +129,39 @@ export class AuthService {
         return user;
     }
     
-  private async signToken(payload: JWTPayloadTypes) : Promise<AccessTokentype> {
-    return { access_token: await this.jwtService.signAsync(payload)} 
+  private async signAccessToken(payload: JWTPayloadTypes) : Promise<string> {
+    return this.jwtService.signAsync(payload, {
+      secret: this.configService.get<string>('JWT_SECRET'),
+      expiresIn: this.configService.get<string>('JWT_EXPIRES_IN') ?? '30m',
+    });
   }
 
-  private async signEmailVerifyToken(payload: EmailVerifyPayloadTypes) : Promise<EmailVerifyTokenType> {
+  private async signRefreshToken(userId: string): Promise<string> {
+    const payload: RefreshPayload = { sub: userId, type: 'refresh' };
+    
+    return this.jwtService.signAsync(payload, {
+      secret: this.configService.get<string>('REFRESH_JWT_SECRET') ?? this.configService.get<string>('JWT_SECRET')!,
+      expiresIn: this.configService.get<string>('REFRESH_EXPIRES_IN') ?? '2d',
+    });
+  }
+
+  private async issueTokens(user: { id: string; name: string; email: string; isEmailVerified: boolean }): Promise<Tokens> {
+    const access = await this.signAccessToken({
+      sub: user.id,
+      name: user.name,
+      email: user.email,
+      isEmailVerified: user.isEmailVerified,
+    });
+    const refresh = await this.signRefreshToken(user.id);
+    // Hash speichern (nie den Rohwert)
+    const salt = await bcrypt.genSalt();
+    const hash = await bcrypt.hash(refresh, salt);
+    await this.userService.update(user.id, { refreshTokenHash: hash });
+    return { access_token: access, refresh_token: refresh };
+  }
+
+  private async signEmailVerifyToken(userId: string) : Promise<EmailVerifyTokenType> {
+    const payload: EmailVerifyPayloadTypes = { sub: userId, type: 'email-verify' };
     return {emailVerifyToken: await this.jwtService.signAsync(payload, { 
       secret: this.configService.get<string>('EMAIL_VERIFY_SECRET') ?? this.configService.get<string>('JWT_SECRET'),
       expiresIn: this.configService.get<string>('EMAIL_VERIFY_EXPIRES_IN') ?? '1h'

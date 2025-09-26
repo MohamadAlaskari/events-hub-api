@@ -1,8 +1,8 @@
-import { Body, Controller, Post, UseGuards, Request, Get } from '@nestjs/common';
+import { Body, Controller, Post, UseGuards, Request, Get, Query } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AccessTokentype } from 'src/common/utils/types/types';
 import { SignupDto } from './dto/signup.dto';
-import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger';
 import { ApiErrorResponses } from '../../common/decorators/api-error-responses.decorator';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { SigninDto } from './dto/signin.dto';
@@ -31,6 +31,13 @@ export class AuthController {
 @ApiResponse({ status: 201, description: 'JWT token issued' })
 async login(@Request() req): Promise<AccessTokentype> {
   return this.authService.login(req.user);
+}
+
+@Get('verify-email')
+@ApiOperation({ summary: 'Verify email by Token'})
+@ApiQuery({ name: 'token', required: true })
+async verifyEmail(@Query('token') token: string) {
+  return this.authService.verifyEmail(token);
 }
 
 @UseGuards(JwtAuthGuard)

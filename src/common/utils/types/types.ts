@@ -10,3 +10,12 @@ export type JWTPayloadTypes = {
 export type AccessTokentype = {
     access_token: string;
 };
+
+export type EmailVerifyPayloadTypes = {
+  sub: string;
+  type: 'email-verify';
+};
+
+export type EmailVerifyTokenType = {
+    emailVerifyToken: string;
+}

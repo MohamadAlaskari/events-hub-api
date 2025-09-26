@@ -8,6 +8,7 @@ import { getTypeOrmConfig } from './db/config/db.config';
 import { AuthModule } from './module/auth/auth.module';
 import { EventModule } from './module/event/event.module';
 import { FavoriteModule } from './module/favorite/favorite.module';
+import { MailModule } from './module/mail/mail.module';
 
 
 
@@ -33,6 +34,7 @@ import { FavoriteModule } from './module/favorite/favorite.module';
     UserModule,
     EventModule,
     FavoriteModule,
+    MailModule,
 
   
   ],

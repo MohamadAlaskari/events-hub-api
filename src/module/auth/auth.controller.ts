@@ -30,7 +30,6 @@ export class AuthController {
 @ApiBody({ type: SigninDto }) // Specify the request body type for Swagger
 @ApiResponse({ status: 201, description: 'JWT token issued' })
 async login(@Request() req): Promise<AccessTokentype> {
-  console.log(req.user); 
   return this.authService.login(req.user);
 }
 

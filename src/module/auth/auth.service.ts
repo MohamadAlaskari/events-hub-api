@@ -3,15 +3,17 @@ import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { AccessTokentype, JWTPayloadTypes } from 'src/common/utils/types/types';
 import {  SignupDto } from './dto/signup.dto';
+import { MailService } from '../mail/mail.service';
 
 import * as bcrypt from 'bcrypt';
 
 
 @Injectable()
 export class AuthService {
-    constructor(
-        private readonly userService: UserService,
-          private jwtService: JwtService
+  constructor(
+    private jwtService: JwtService,
+    private readonly userService: UserService,
+    private readonly mailService: MailService,
   ) {}
 
   async signup(signupDto: SignupDto) :Promise<AccessTokentype> {
@@ -27,6 +29,7 @@ export class AuthService {
   }
   
   async login(user: any): Promise<AccessTokentype> {
+    this.mailService.sendWelcomeEmail(user.email, user.name);
     return this.signToken({
       sub: user.id,
       name: user.name,

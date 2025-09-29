@@ -18,8 +18,7 @@ async function bootstrap() {
       'http://localhost:3000', 
       'https://preview--spire-scene.lovable.app',
       'https://spire-scene.lovable.app',
-      'https://spire-scene-zi1q.vercel.app',
-      'https://spire-scene-zi1q.vercel.app'
+      'https://spire-scene.vercel.app/'
       
     ],
    

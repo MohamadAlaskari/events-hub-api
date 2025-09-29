@@ -30,8 +30,8 @@ export class AuthController {
 @ApiOperation({ summary: 'Login and receive JWT access token' })
 @ApiBody({ type: SigninDto }) // Specify the request body type for Swagger
 @ApiResponse({ status: 201, description: 'JWT token issued' })
-async login(@Request() req): Promise<AccessTokentype> {
-  return this.authService.login(req.user);
+async login(@Body() signinDto:SigninDto): Promise<AccessTokentype> {
+  return this.authService.login(signinDto);
 }
 
 @Get('verify-email')

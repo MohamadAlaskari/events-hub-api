@@ -7,6 +7,7 @@ import { MailService } from '../mail/mail.service';
 
 import * as bcrypt from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
+import { SigninDto } from './dto/signin.dto';
 
 
 @Injectable()
@@ -44,13 +45,27 @@ export class AuthService {
    
   }
   
-  async login(user: any): Promise<Tokens> {
-    this.mailService.sendWelcomeEmail(user.email, user.name);
+  async login(user: SigninDto): Promise<Tokens> {
+    const loggedUser = await this.userService.findByEmail(user.email);
+    if (!loggedUser) throw new NotFoundException('User not found');
+    
+
+    const ok = await bcrypt.compare(user.password, loggedUser.password);
+    if (!ok) throw new BadRequestException('Wrong credentials');
+    
+
+    console.log(loggedUser.isEmailVerified);
+    if (!loggedUser.isEmailVerified) {
+      throw new ForbiddenException('Email not verified');
+    }
+    
+    
+    this.mailService.sendWelcomeEmail(user.email, loggedUser.name);
     return this.issueTokens({
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      isEmailVerified: user.isEmailVerified
+      id: loggedUser.id,
+      name: loggedUser.name,
+      email: loggedUser.email,
+      isEmailVerified: loggedUser.isEmailVerified
     });
   }
 

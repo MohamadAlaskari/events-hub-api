@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsEmail, IsNotEmpty, IsString, MaxLength, MinLength } from "class-validator";
+import { IsEmail, IsEnum, IsNotEmpty, IsString, MaxLength, MinLength } from "class-validator";
+import { CountryCode } from "src/module/user/enum/CountryCode.enum";
 
 export class SignupDto {
 
@@ -21,4 +22,15 @@ export class SignupDto {
     @IsNotEmpty()
     @MinLength(5)
     password: string;
+
+    @ApiProperty({
+    example: "DE",
+    description: "Country code of the user (ISO alpha-2). Default is DE (Germany).",
+    enum: CountryCode,
+    default: CountryCode.DE,
+    required: false, })
+    
+    @IsEnum(CountryCode , { message: "Country must be a valid ISO alpha-2 code" })
+    country?: CountryCode = CountryCode.DE;
+
 }

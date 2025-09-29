@@ -8,6 +8,7 @@ import { MailService } from '../mail/mail.service';
 import * as bcrypt from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
 import { SigninDto } from './dto/signin.dto';
+import { UpdateUserDto } from '../user/dto/update-user.dto';
 
 
 @Injectable()
@@ -88,7 +89,7 @@ export class AuthService {
   }
 
   async logout(userId: string): Promise<{ status: true , message: string }> {
-    await this.userService.update(userId, { refreshTokenHash: null });
+    await this.userService.update(userId, { refreshTokenHash: null }) as UpdateUserDto;
     return { status: true  , message: 'Logged out successfully' };
   }
 

@@ -54,14 +54,15 @@ async verifyEmail(@Query('token') token: string) {
   @Post('logout')
   @ApiOperation({ summary: 'Invalidate refresh token for current user' })
   logout(@Request() req) {
-    return this.authService.logout(req.user.id);
+    console.log(req.user);
+    return this.authService.logout(req.user.sub);
   }
 
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth() 
 @Get('profile')
 me(@Request() req) {
-  return this.authService.getProfile(req.user.id); // Payload oder kompletter User je nach JwtStrategy.validate
+  return this.authService.getProfile(req.user.sub); 
 }
 }
 

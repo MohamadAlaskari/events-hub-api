@@ -14,6 +14,6 @@ export const getTypeOrmConfig = (
     database: configService.get<string>('DB_NAME'),
     autoLoadEntities: true,
     synchronize: true, // In Produktion sollte dies auf `false` gesetzt werden!
-   logging: configService.get<boolean>('DB_LOGGING', false),
+   logging: configService.get<boolean>('DB_LOGGING', true),
 });
 

@@ -10,7 +10,9 @@ export class Favorite {
     @Column()
     eventId: string;
 
-    @ManyToOne(() => User, user => user.favorites)
+    @ManyToOne(() => User, user => user.favorites,{
+        onDelete: 'CASCADE'
+    })
     user: User;
 
     @Column()

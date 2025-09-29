@@ -28,7 +28,7 @@ export class AuthService {
     this.configService.get<string>('API_BASE_URL') ?? 
     'http://localhost:3000';
 
-    this.mailService.sendVerificationEmail(
+    await this.mailService.sendVerificationEmail(
       createdUser.email, 
       createdUser.name,
       emailVerifyToken.emailVerifyToken,

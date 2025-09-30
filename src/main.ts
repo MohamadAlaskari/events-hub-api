@@ -13,19 +13,7 @@ async function bootstrap() {
 
 
   // Enable CORS for all origins 
-  app.enableCors({
-  origin: [
-    'http://localhost:3000',
-    'https://eventhub.alaskaritech.com',
-    'https://preview--spire-scene.lovable.app/'
-  
-  ],
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-  allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
-
-  credentials: true,
-  
-});
+  app.enableCors();
 
   // activate global HTTP exception filter 
   app.useGlobalFilters(new GlobalExceptionFilter());

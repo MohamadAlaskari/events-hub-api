@@ -20,7 +20,7 @@ export class AuthService {
     private readonly configService: ConfigService,
   ) {}
 
-  async signup(signupDto: SignupDto) :Promise<Tokens> {
+  async signup(signupDto: SignupDto) : Promise <any> {
     const createdUser =await this.userService.create(signupDto);
 
     const emailVerifyToken:EmailVerifyTokenType  = await this.signEmailVerifyToken(createdUser.id)
@@ -37,12 +37,7 @@ export class AuthService {
       );
 
 
-     return this.issueTokens({
-      id: createdUser.id,
-      name: createdUser.name,
-      email: createdUser.email,
-      isEmailVerified: createdUser.isEmailVerified
-    });
+     return { status: true ,  message : 'User created successfully, please verify your email' }
    
   }
   
